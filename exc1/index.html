@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta lang="pt-BR">
+    <title>Exercício 1 - Programação WEB</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+
+</head>
+
+<body>
+    <nav class="mb-4">
+        <div class="d-flex bg-blue" id="nav-first-row">
+            <div class="brand-icon ml-sm-4"></div>
+            <div class="align-self-center h1 text-white">Cruzeiro Esporte Clube</div>
+        </div>
+        <div class="bg-white d-flex" id="nav-second-row">
+            <div class="ml-sm-4 align-self-center text-blue">Relação de títulos</div>
+        </div>
+    </nav>
+
+    <div id="app">
+        <div class="modal fade" id="createEditModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{editar==null?'Criar ':'Editar '}}título</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control m-2" placeholder="Competição" v-model="inpCompeticao">
+                        <input type="number" min="0" class="form-control m-2" placeholder="Quantidade de Títulos" v-model="inpTitulos">
+                        <input type="text" class="form-control m-2" placeholder="Temporadas" v-model="inpTemporadas">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" @click="submit">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container ">
+            <div class="card mb-4 " id="table-card">
+                <div class="card-body pb-4">
+                    <div class="h1 text-center" v-if="table.length <= 0">
+                        Nenhum título registrado!
+                    </div>
+                    <table class="table" v-else>
+                        <thead>
+                            <tr>
+                                <th scope="col">Competição</th>
+                                <th scope="col">Títulos</th>
+                                <th scope="col">Temporadas</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="linha in table">
+                                <td>{{ linha.competicao }}</td>
+                                <td>{{ linha.titulos }}</td>
+                                <td>{{ linha.temporadas }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" @click="excluir(linha)">Excluir</button>
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createEditModal" @click="markEdit(linha)">Editar</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <button type="button" class="btn btn-info" @click="markNew" data-toggle="modal" data-target="#createEditModal">Cadastrar novo</button>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

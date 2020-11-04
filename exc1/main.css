@@ -1,0 +1,39 @@
+.brand-icon {
+    background-image: url("escudo.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    height: 120px;
+    width: 100px;
+}
+
+#table-card {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+body {
+    background-image: url("bg-tacas.jpg");
+    background-repeat: no-repeat;
+    background-color: aliceblue !important;
+}
+
+.bg-blue {
+    background-color: #005ba2;
+}
+
+.text-blue {
+    color: #005ba2;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+#nav-first-row {
+    height: 70px !important;
+}
+
+#nav-second-row {
+    height: 50px !important;
+    padding-left: 100px;
+}
