@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta http-equiv="Content-Language" content="pt-br">
+    <title>Exercício 2 - Programação WEB</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification/dist/theme-sugar.css" rel="stylesheet">
+    <link rel='stylesheet' type='text/css' media='screen' href='assets/css/index.css'>
+
+</head>
+
+<body>
+    <div id="app">
+        <md-dialog :md-active.sync="showDialog">
+            <md-dialog-title>Criar novo contato</md-dialog-title>
+            <md-dialog-content class="md-layout md-gutter">
+                <div class="md-layout-item">
+                    <div class="md-layout md-gutter">
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Nome</label>
+                                <md-input v-model="novoNome"></md-input>
+                            </md-field>
+                        </div>
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Telefone</label>
+                                <md-input v-model="novoTelefone" v-mask="'(##) ?####-####'"></md-input>
+                            </md-field>
+                        </div>
+
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary" @click="showDialog = false">Cancelar</md-button>
+                <md-button class="md-primary" @click="cadastrarNovo()">Salvar</md-button>
+            </md-dialog-actions>
+        </md-dialog>
+        <div class="md-layout md-alignment-center-center">
+            <div>
+                <md-button @click="showDialog = true" class="md-raised md-primary">
+                    <md-icon>add</md-icon>
+                    Adicionar contato
+                </md-button>
+            </div>
+            <div class="md-layout-item">
+                <md-field md-clearable>
+                    <md-icon>search</md-icon>
+                    <label>Pesquisar contato</label>
+                    <md-input v-model="search"></md-input>
+                </md-field>
+            </div>
+        </div>
+        <div class="md-layout md-gutter">
+            <div class="md-layout-item">
+                <md-table v-if="contatos.length > 0">
+                    <md-table-row>
+                        <md-table-head>Nome</md-table-head>
+                        <md-table-head>Telefone</md-table-head>
+                        <md-table-head>Ações</md-table-head>
+                    </md-table-row>
+                    <md-table-row v-for="(contato,key) in contatos">
+
+                        <md-table-cell>
+
+
+                            <md-field md-inline :class="(editandoKey == key)?'md-field-editando':'md-field-readonly'">
+                                <label>Nome</label>
+                                <md-input v-model="contato.nome" :readonly="editandoKey != key"></md-input>
+                            </md-field>
+
+                        </md-table-cell>
+                        <md-table-cell>
+                            <md-field md-inline :class="(editandoKey == key)?'md-field-editando':'md-field-readonly'">
+                                <label>Telefone</label>
+                                <md-input v-mask="'(##) #####-####'" v-model="contato.telefone" :readonly="editandoKey != key"></md-input>
+                            </md-field>
+                        </md-table-cell>
+                        <md-table-cell>
+                            <div v-if="key != editandoKey" class="md-layout">
+                                <div class="md-layout-item">
+                                    <md-button @click="editar(key)" class="md-icon-button md-raised md-primary">
+                                        <md-icon>edit</md-icon>
+                                    </md-button>
+                                </div>
+                                <div class="md-layout-item">
+                                    <md-button class="md-icon-button md-raised md-accent">
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <md-button class="md-raised" @click="salvarEdicao(key)">Salvar edição</md-button>
+                            </div>
+
+                        </md-table-cell>
+                    </md-table-row>
+
+                </md-table>
+                <div v-else-if="carregando" class="md-layout-item">
+                    <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+                </div>
+                <div v-else class="md-layout-item">
+                    <md-empty-state md-icon="contacts" md-label="Sem contatos para exibir" md-description="Não foi possível encontrar nenhum contato com as definições de pesquisa atuais.">
+                    </md-empty-state>
+                </div>
+
+
+            </div>
+            <div class="md-layout-item md-size-10 md-small-size-100" v-if="search == ''">
+                <md-button @click="selecionaLetra(null)" class="md-layout-item  mbt-0" :class="letraSelecionada ==  null?'md-raised md-primary':''">
+                    Tudo
+                </md-button>
+                <md-button class="md-layout-item mbt-0" @click="showLetras = !showLetras">
+                    <md-icon>{{showLetras?'close':'more_vert'}} </md-icon>
+                </md-button>
+                <template v-if="showLetras">
+                    <md-button @click="selecionaLetra(letra)" class="md-layout-item  mbt-0" :class="letraSelecionada == letra?'md-raised md-primary ':' '" v-for="letra in listaAlfabetica">
+                        {{letra}}
+                    </md-button>
+                </template>
+                <md-button v-else-if="letraSelecionada!=null" class="md-raised md-primary">{{letraSelecionada}}</md-button>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/vue-material"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
+
+    <script src="assets/js/app.js"></script>
+</body>
+
+</body>

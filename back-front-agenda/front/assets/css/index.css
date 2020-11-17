@@ -1,0 +1,12 @@
+.md-field-readonly:after,
+.md-field-readonly:before {
+    display: none !important;
+}
+
+body {
+    margin: 0 10%;
+}
+
+.mbt-0 {
+    margin: 0 !important;
+}
