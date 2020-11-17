@@ -26,12 +26,14 @@ public class ContatoController {
     @CrossOrigin
     @GetMapping("/byletter/{letra}")
     public List<Contato> listByLetter(@PathVariable String letra) {
+    	letra = letra+"%";
         return contatoService.listAllContatosByLetter(letra);
     }
     
     @CrossOrigin
     @GetMapping("/search/{nome}")
     public List<Contato> listByNameLike(@PathVariable String nome) {
+    	nome = "%"+nome+"%";
         return contatoService.listAllContatosByNameLike(nome);
     }
     

@@ -17,11 +17,9 @@ public class ContatoService {
         return contatoRepository.findAll();
     }
     public List<Contato> listAllContatosByLetter(String letra) {
-    	letra = letra+"%";
         return contatoRepository.findByNomeLike(letra);
     }
     public List<Contato> listAllContatosByNameLike(String nome) {
-    	nome = "%"+nome+"%";
         return contatoRepository.findByNomeLike(nome);
     }
 
