@@ -20,12 +20,20 @@ const app = new Vue({
             novoTelefone: "",
             showLetras: false,
             showDialog: false,
+            showDialogDelete: false,
+            excluirId: null,
         };
     },
     async mounted() {
         this.getContatos();
     },
     methods: {
+        async confirmarExclusao() {
+            this.showDialogDelete = false;
+            await instanceAxios.delete("contatos/" + this.excluirId);
+            this.novaNotificacao("Contato excluido com sucesso!");
+            this.getContatos();
+        },
         async getContatos() {
             this.carregando = true;
             this.contatos = [];
@@ -55,6 +63,10 @@ const app = new Vue({
             this.showDialog = false;
             this.letraSelecionada = null;
             this.getContatos();
+        },
+        excluir(key) {
+            this.showDialogDelete = true;
+            this.excluirId = this.contatos[key].id;
         },
         novaNotificacao(message, type = "info") {
             Vue.$toast.open({ postion: "top-right", type, message });
@@ -104,7 +116,10 @@ const app = new Vue({
 instanceAxios.interceptors.response.use(
     (response) => response,
     (error) => {
-        const { data } = error.response;
+        const { data } = error.response || {
+            error: "Erro desconhecido!",
+            message: "não foi possível identificar o erro",
+        };
 
         app.novaNotificacao(data.error + ": " + data.message, "error");
         throw error;

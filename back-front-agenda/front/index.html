@@ -43,6 +43,9 @@
                 <md-button class="md-primary" @click="cadastrarNovo()">Salvar</md-button>
             </md-dialog-actions>
         </md-dialog>
+
+        <md-dialog-confirm :md-active.sync="showDialogDelete" md-title="Confirmar exclusão?" md-content="Tem certeza que deseja excluir este contato?" md-confirm-text="Excluir" md-cancel-text="Cancelar" @md-cancel="showDialogDelete = false" @md-confirm="confirmarExclusao"></md-dialog-confirm>
+
         <div class="md-layout md-alignment-center-center">
             <div>
                 <md-button @click="showDialog = true" class="md-raised md-primary">
@@ -91,7 +94,7 @@
                                     </md-button>
                                 </div>
                                 <div class="md-layout-item">
-                                    <md-button class="md-icon-button md-raised md-accent">
+                                    <md-button @click="excluir(key)" class="md-icon-button md-raised md-accent">
                                         <md-icon>delete</md-icon>
                                     </md-button>
                                 </div>
