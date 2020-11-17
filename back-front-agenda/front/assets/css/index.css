@@ -3,8 +3,12 @@
     display: none !important;
 }
 
+.table-max {
+    max-width: calc(100vw - 10vw);
+}
+
 body {
-    margin: 0 10%;
+    margin: 0 5vw;
 }
 
 .mbt-0 {
