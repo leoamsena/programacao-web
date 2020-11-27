@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta http-equiv="Content-Language" content="pt-br">
+    <title>Exercício 2 - Programação WEB</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification/dist/theme-sugar.css" rel="stylesheet">
+    <link rel='stylesheet' type='text/css' media='screen' href='assets/css/index.css'>
+
+</head>
+
+<body>
+    <div id="app">
+        <md-dialog :md-active.sync="showDialog" @md-closed="dialogClosed()">
+            <md-dialog-title>Criar novo contato</md-dialog-title>
+            <md-dialog-content>
+                <div class="md-layout md-gutter">
+                    <div class="md-layout-item">
+                        <md-field>
+                            <label>Nome</label>
+                            <md-input v-model="novoNome"></md-input>
+                        </md-field>
+                    </div>
+                    <div class="md-layout-item">
+                        <md-field>
+                            <label>Telefone</label>
+                            <md-input v-model="novoTelefone" v-mask="'(##) ?####-####'"></md-input>
+                        </md-field>
+
+                    </div>
+                </div>
+                <div class="md-layout md-gutter">
+                    <div class="md-layout-item">
+                        <md-field :class="{'md-invalid': !cepValido}">
+                            <label>CEP</label>
+                            <md-input v-model="cep" v-mask="'##.###-###'" maxlength="10"></md-input>
+                        </md-field>
+                    </div>
+                </div>
+                <div v-show="cepValido">
+                    <div class="md-layout md-gutter">
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Logradouro</label>
+                                <md-input v-model="logradouro"></md-input>
+                            </md-field>
+                        </div>
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Número</label>
+                                <md-input v-model="numero"></md-input>
+                            </md-field>
+                        </div>
+                    </div>
+                    <div class="md-layout md-gutter">
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Cidade</label>
+                                <md-input v-model="cidade"></md-input>
+                            </md-field>
+                        </div>
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Bairro</label>
+                                <md-input v-model="bairro"></md-input>
+                            </md-field>
+                        </div>
+                    </div>
+                    <div class="md-layout md-gutter">
+                        <div class="md-layout-item">
+                            <md-field>
+                                <label>Estado</label>
+                                <md-input v-model="estado"></md-input>
+                            </md-field>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions>
+                <md-button class="md-primary" @click="showDialog = false">Cancelar</md-button>
+                <md-button class="md-primary" @click="(editandoKey != null)?salvarEdicao(editandoKey):cadastrarNovo()">Salvar</md-button>
+            </md-dialog-actions>
+        </md-dialog>
+
+        <md-dialog-confirm :md-active.sync="showDialogDelete" md-title="Confirmar exclusão?" md-content="Tem certeza que deseja excluir este contato?" md-confirm-text="Excluir" md-cancel-text="Cancelar" @md-cancel="showDialogDelete = false" @md-confirm="confirmarExclusao"></md-dialog-confirm>
+
+        <div class="md-layout md-alignment-center-center">
+            <div>
+                <md-button @click="showDialog = true" class="md-raised md-primary">
+                    <md-icon>add</md-icon>
+                    Adicionar contato
+                </md-button>
+            </div>
+            <div class="md-layout-item">
+                <md-field md-clearable>
+                    <md-icon>search</md-icon>
+                    <label>Pesquisar contato</label>
+                    <md-input v-model="search"></md-input>
+                </md-field>
+            </div>
+        </div>
+        <div class="md-layout md-gutter">
+            <div class="md-layout-item">
+                <md-table class="table-max" v-if="contatos.length > 0">
+                    <md-table-row>
+                        <md-table-head>Nome</md-table-head>
+                        <md-table-head>Telefone</md-table-head>
+                        <md-table-head>CEP</md-table-head>
+                        <md-table-head>Logradouro</md-table-head>
+                        <md-table-head>Nº</md-table-head>
+                        <md-table-head>Bairro</md-table-head>
+                        <md-table-head>Cidade</md-table-head>
+                        <md-table-head>Estado</md-table-head>
+                        <md-table-head>Ações</md-table-head>
+                    </md-table-row>
+                    <md-table-row v-for="(contato,key) in contatos">
+
+                        <md-table-cell>
+
+
+                            {{contato.nome}}
+
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{contato.telefone}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{(contato.cep+"").replace( /^(\d{2})(\d{3})(\d{3})/g, "$1.$2-$3" )}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{contato.logradouro}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{contato.numero}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{contato.bairro}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{contato.cidade}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            {{contato.estado}}
+                        </md-table-cell>
+                        <md-table-cell>
+                            <div v-if="key != editandoKey" class="md-layout">
+                                <div class="md-layout-item">
+                                    <md-button @click="editar(key)" class="md-icon-button md-raised md-primary">
+                                        <md-icon>edit</md-icon>
+                                    </md-button>
+                                </div>
+                                <div class="md-layout-item">
+                                    <md-button @click="excluir(key)" class="md-icon-button md-raised md-accent">
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+                            </div>
+
+                        </md-table-cell>
+                    </md-table-row>
+
+                </md-table>
+                <div v-else-if="carregando" class="md-layout-item">
+                    <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+                </div>
+                <div v-else class="md-layout-item">
+                    <md-empty-state md-icon="contacts" md-label="Sem contatos para exibir" md-description="Não foi possível encontrar nenhum contato com as definições de pesquisa atuais.">
+                    </md-empty-state>
+                </div>
+
+
+            </div>
+            <div class="md-layout-item md-size-10 md-small-size-100" v-if="search == ''">
+                <md-button @click="selecionaLetra(null)" class="md-layout-item  mbt-0" :class="letraSelecionada ==  null?'md-raised md-primary':''">
+                    Tudo
+                </md-button>
+                <md-button class="md-layout-item mbt-0" @click="showLetras = !showLetras">
+                    <md-icon>{{showLetras?'close':'more_vert'}} </md-icon>
+                </md-button>
+                <template v-if="showLetras">
+                    <md-button @click="selecionaLetra(letra)" class="md-layout-item  mbt-0" :class="letraSelecionada == letra?'md-raised md-primary ':' '" v-for="letra in listaAlfabetica">
+                        {{letra}}
+                    </md-button>
+                </template>
+                <md-button v-else-if="letraSelecionada!=null" class="md-raised md-primary">{{letraSelecionada}}</md-button>
+
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/vue-material"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification"></script>
+    <script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
+
+    <script src="assets/js/app.js"></script>
+</body>
+
+</body>
