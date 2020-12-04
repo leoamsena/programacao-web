@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/progweb", {
-    useNewUrlParser: true
+mongoose.connect("mongodb://localhost:27017/app", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 });
 module.exports = mongoose;

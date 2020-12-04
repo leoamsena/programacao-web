@@ -1,5 +1,4 @@
 const mongoose = require("../database");
-
 const PessoaSchema = new mongoose.Schema({
     nome: {
         type: String
