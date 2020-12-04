@@ -23,8 +23,8 @@ public class Contato {
     public Contato() {
     }
 
-    public Contato(int id, String nome, String telefone,String logradouro,int cep,int numero,String bairro,String cidade, String estado) {
-        this.setId(id);
+    public Contato( String nome, String telefone,String logradouro,int cep,int numero,String bairro,String cidade, String estado) {
+        
         this.setNome(nome);
         this.setTelefone(telefone);
         this.setLogradouro(logradouro);
@@ -58,7 +58,12 @@ public class Contato {
 	}
 
 	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+		String tel = telefone.replaceAll("\\(", "");
+		tel = tel.replaceAll("\\)", "");
+		tel = tel.replaceAll("-", "");
+		tel = tel.replaceAll(" ", "");
+		Long.parseLong(tel);
+		this.telefone =  tel;
 	}
 
 	public int getNumero() {

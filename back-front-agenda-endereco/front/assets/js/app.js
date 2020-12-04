@@ -25,8 +25,8 @@ const app = new Vue({
             estado: null,
             bairro: null,
             instanceAxios: axios.create({
-                baseURL: "http://localhost:8080/",
-                timeout: 1000,
+                baseURL: "http://192.168.1.8:8080/",
+                //timeout: 100000,
             }),
         };
     },

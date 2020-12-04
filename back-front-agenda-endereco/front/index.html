@@ -24,13 +24,13 @@
                     <div class="md-layout-item">
                         <md-field>
                             <label>Nome</label>
-                            <md-input v-model="novoNome"></md-input>
+                            <md-input v-model="novoNome" id="inpNome"></md-input>
                         </md-field>
                     </div>
                     <div class="md-layout-item">
                         <md-field>
                             <label>Telefone</label>
-                            <md-input v-model="novoTelefone" v-mask="'(##) ?####-####'"></md-input>
+                            <md-input id="inpTel" v-model="novoTelefone" v-mask="'(##) ?####-####'"></md-input>
                         </md-field>
 
                     </div>
@@ -39,7 +39,7 @@
                     <div class="md-layout-item">
                         <md-field :class="{'md-invalid': !cepValido}">
                             <label>CEP</label>
-                            <md-input v-model="cep" v-mask="'##.###-###'" maxlength="10"></md-input>
+                            <md-input id="inpCEP" v-model="cep" v-mask="'##.###-###'" maxlength="10"></md-input>
                         </md-field>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         <div class="md-layout-item">
                             <md-field>
                                 <label>Número</label>
-                                <md-input v-model="numero"></md-input>
+                                <md-input id="inpNumero" v-model="numero"></md-input>
                             </md-field>
                         </div>
                     </div>
@@ -84,15 +84,16 @@
             </md-dialog-content>
             <md-dialog-actions>
                 <md-button class="md-primary" @click="showDialog = false">Cancelar</md-button>
-                <md-button class="md-primary" @click="(editandoKey != null)?salvarEdicao(editandoKey):cadastrarNovo()">Salvar</md-button>
+                <md-button class="md-primary" id="btnSub" @click="(editandoKey != null)?salvarEdicao(editandoKey):cadastrarNovo()">Salvar</md-button>
             </md-dialog-actions>
         </md-dialog>
 
-        <md-dialog-confirm :md-active.sync="showDialogDelete" md-title="Confirmar exclusão?" md-content="Tem certeza que deseja excluir este contato?" md-confirm-text="Excluir" md-cancel-text="Cancelar" @md-cancel="showDialogDelete = false" @md-confirm="confirmarExclusao"></md-dialog-confirm>
+        <md-dialog-confirm class="dialogConfirmelete" :md-active.sync="showDialogDelete" md-title="Confirmar exclusão?" md-content="Tem certeza que deseja excluir este contato?" md-confirm-text="Excluir" md-cancel-text="Cancelar" @md-cancel="showDialogDelete = false"
+            @md-confirm="confirmarExclusao"></md-dialog-confirm>
 
         <div class="md-layout md-alignment-center-center">
             <div>
-                <md-button @click="showDialog = true" class="md-raised md-primary">
+                <md-button @click="showDialog = true" class="md-raised md-primary" id="botao-add">
                     <md-icon>add</md-icon>
                     Adicionar contato
                 </md-button>
@@ -156,7 +157,7 @@
                                     </md-button>
                                 </div>
                                 <div class="md-layout-item">
-                                    <md-button @click="excluir(key)" class="md-icon-button md-raised md-accent">
+                                    <md-button @click="excluir(key)" class="btnDelete md-icon-button md-raised md-accent">
                                         <md-icon>delete</md-icon>
                                     </md-button>
                                 </div>
